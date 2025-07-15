@@ -495,8 +495,13 @@ Description: Write a CTAS query to create a new table that lists each member and
     Member ID
     Number of overdue books
     Total fines
-
-
+```sql
+CREATE TABLE  fine_calculator AS
+	SELECT issued_member_id Member_ID, COUNT(*) count_overdue, SUM(CURRENT_DATE - i.issued_date)*0.5 AS total_fines FROM issued_status i
+	LEFT JOIN return_status r ON i.issued_id = r.issued_id
+	WHERE return_date IS NULL AND CURRENT_DATE - i.issued_date > 30
+	GROUP BY 1;
+```
 
 ## Reports
 
